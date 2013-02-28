@@ -3,7 +3,13 @@
  - adjacent numbers in the same direction (up, down, left, right, or diagonally)?
  -}
 
-numberGrid :: [[Integer]]
+data Line = RightDiagonal
+          | LeftDiagonal
+          | Vertical
+          | Horizontal
+          deriving (Eq)
+
+numberGrid :: [[Int]]
 numberGrid = [[ 8 ,  2 , 22 , 97 , 38 , 15 ,  0 , 40 ,  0 , 75 ,  4 ,  5 ,  7 , 78 , 52 , 12 , 50 , 77 , 91 ,  8],
               [49 , 49 , 99 , 40 , 17 , 81 , 18 , 57 , 60 , 87 , 17 , 40 , 98 , 43 , 69 , 48 ,  4 , 56 , 62 ,  0],
               [81 , 49 , 31 , 73 , 55 , 79 , 14 , 29 , 93 , 71 , 40 , 67 , 53 , 88 , 30 ,  3 , 49 , 13 , 36 , 65],
@@ -25,47 +31,29 @@ numberGrid = [[ 8 ,  2 , 22 , 97 , 38 , 15 ,  0 , 40 ,  0 , 75 ,  4 ,  5 ,  7 , 
               [20 , 73 , 35 , 29 , 78 , 31 , 90 ,  1 , 74 , 31 , 49 , 71 , 48 , 86 , 81 , 16 , 23 , 57 ,  5 , 54],
               [ 1 , 70 , 54 , 71 , 83 , 51 , 54 , 69 , 16 , 92 , 33 , 48 , 61 , 43 , 52 ,  1 , 89 , 19 , 67 , 48]]
 
-greatestProductOfFour :: Integer
-greatestProductOfFour = maximum $ map product $ leftDiagonals ++ rightDiagonals ++ verticals ++ horizontals
+greatestProductOfFour :: Int
+greatestProductOfFour = maximum $ map product allLines where
+    allLines = lines' RightDiagonal ++ lines' LeftDiagonal ++ lines' Vertical ++ lines' Horizontal
 
-leftDiagonals :: [[Integer]]
-leftDiagonals = [ leftDiag x y | x <- [0..rightBound], y <- [0..lowerBound] ] where
-    rightBound = gridEdge - 3
-    lowerBound = gridEdge - 3
-    gridEdge   = length numberGrid - 1
+lines' :: Line -> [[Int]]
+lines' lineType
+    | lineType == RightDiagonal = [ lineNumbers RightDiagonal y x | y <- [0..(gridEdge - 3)] , x <- [3..gridEdge]       ]
+    | lineType == LeftDiagonal  = [ lineNumbers LeftDiagonal  y x | y <- [0..(gridEdge - 3)] , x <- [0..(gridEdge - 3)] ]
+    | lineType == Vertical      = [ lineNumbers Vertical      y x | y <- [0..(gridEdge - 3)] , x <- [0..gridEdge]       ]
+    | lineType == Horizontal    = [ lineNumbers Horizontal    y x | y <- [0..gridEdge]       , x <- [0..(gridEdge - 3)] ]
+    | otherwise                 = error "Non-existent line type."
+    where
+        gridEdge = length numberGrid - 1
 
-    leftDiag upperLeftX upperLeftY = [numberGrid !!  upperLeftY      !!  upperLeftX     ,
-                                      numberGrid !! (upperLeftY + 1) !! (upperLeftX + 1),
-                                      numberGrid !! (upperLeftY + 2) !! (upperLeftX + 2),
-                                      numberGrid !! (upperLeftY + 3) !! (upperLeftX + 3)]
-
-rightDiagonals :: [[Integer]]
-rightDiagonals = [ rightDiag x y | x <- [leftBound..gridEdge], y <- [0..lowerBound] ] where
-    leftBound  = 3
-    lowerBound = gridEdge - 3
-    gridEdge   = length numberGrid - 1
-
-    rightDiag upperLeftX upperLeftY = [numberGrid !!  upperLeftY      !!  upperLeftX     ,
-                                       numberGrid !! (upperLeftY + 1) !! (upperLeftX - 1),
-                                       numberGrid !! (upperLeftY + 2) !! (upperLeftX - 2),
-                                       numberGrid !! (upperLeftY + 3) !! (upperLeftX - 3)]
-
-verticals :: [[Integer]]
-verticals = [ vertical x y | x <- [0..gridEdge], y <- [0..lowerBound] ] where
-    lowerBound = gridEdge - 3
-    gridEdge   = length numberGrid - 1
-
-    vertical upperLeftX upperLeftY = [numberGrid !!  upperLeftY      !! upperLeftX,
-                                      numberGrid !! (upperLeftY + 1) !! upperLeftX,
-                                      numberGrid !! (upperLeftY + 2) !! upperLeftX,
-                                      numberGrid !! (upperLeftY + 3) !! upperLeftX]
-
-horizontals :: [[Integer]]
-horizontals = [ horizontal x y | x <- [0..rightBound], y <- [0..gridEdge] ] where
-    rightBound = 3
-    gridEdge   = length numberGrid - 1
-
-    horizontal upperLeftX upperLeftY = [numberGrid !! upperLeftY !!  upperLeftX     ,
-                                        numberGrid !! upperLeftY !! (upperLeftX + 1),
-                                        numberGrid !! upperLeftY !! (upperLeftX + 2),
-                                        numberGrid !! upperLeftY !! (upperLeftX + 3)]
+lineNumbers :: Line -> Int -> Int -> [Int]
+lineNumbers lineType startY startX
+    | lineType == RightDiagonal = getNumbers 1 2 3 (-1) (-2) (-3)
+    | lineType == LeftDiagonal  = getNumbers 1 2 3   1    2    3
+    | lineType == Vertical      = getNumbers 1 2 3   0    0    0
+    | lineType == Horizontal    = getNumbers 0 0 0   1    2    3
+    | otherwise                 = error "Non-existent line type."
+    where
+        getNumbers yb yc yd xb xc xd = [numberGrid !!  startY       !!  startX      ,
+                                        numberGrid !! (startY + yb) !! (startX + xb),
+                                        numberGrid !! (startY + yc) !! (startX + xc),
+                                        numberGrid !! (startY + yd) !! (startX + xd)]
