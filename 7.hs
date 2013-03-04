@@ -3,11 +3,7 @@
  - that the 6th prime is 13.
  - What is the 10001st prime number?
  -}
+import Primes
 
 nthPrime :: Integer -> Integer
 nthPrime n = last $ take (fromIntegral n) primes
-
-primes :: [Integer]
-primes = 2: 3: sieve (tail primes) [5,7..] where
-    sieve (p:ps) xs = h ++ sieve ps [x | x <- t, rem x p /= 0] where
-        (h,~(_:t)) = span(< p*p) xs
