@@ -8,5 +8,5 @@ primes = 2: 3: sieve (tail primes) [5,7..] where
         (h,~(_:t)) = span(< p*p) xs
 
 primeFactors :: Integer -> [Integer]
-primeFactors maxVal = filter ((== 0) . (maxVal `mod`)) $ primesBelowSQRT maxVal where
-    primesBelowSQRT maxVal' = takeWhile ((< maxVal') . (\x -> x*x)) primes
+primeFactors maxVal = filter ((== 0) . (maxVal `mod`)) $ halfOfPrimes maxVal where
+    halfOfPrimes maxVal' = takeWhile ((<= maxVal') . (*2)) primes
