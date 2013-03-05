@@ -20,6 +20,8 @@ triangleNumbers :: [Integer]
 triangleNumbers = 1 : loop 1 2 where
     loop currentSum n = currentSum + n : loop (currentSum + n) (n + 1)
 
+-- Only check up to the square root of the max value, since mirror factors will
+-- be present above that.
 divisors :: Integer -> [Integer]
 divisors val = divsBelowSQRT ++ divsAboveSQRT where
     divsBelowSQRT = filter ((==0) . (val `mod`)) [1..(truncate $ sqrt (fromInteger val :: Double))]
