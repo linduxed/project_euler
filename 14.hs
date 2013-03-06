@@ -15,6 +15,9 @@
  - NOTE: Once the chain starts the terms are allowed to go above one million.
  -}
 
+main :: IO ()
+main = print problem14
+
 problem14 :: Integer
 problem14 = accLoop 1 0 0 where
     accLoop startNum longestSequenceNum longestSequenceLength
