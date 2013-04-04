@@ -4,7 +4,7 @@
 require "prime"
 
 def prime_factors(number)
-  primes = Prime.each(number).to_a
+  primes = Prime.each(Math.sqrt(number).truncate).to_a
   primes_smaller_than_half_of_number = primes.select { |i| i*2 <= number }
   factors = primes_smaller_than_half_of_number.select { |i| number % i == 0 }
 
