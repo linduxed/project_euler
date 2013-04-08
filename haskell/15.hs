@@ -18,7 +18,7 @@ pickAllPaths gridSize = branchLoop (availableDirections start) [] start
     start = (0, 0)
 
     branchLoop :: [Direction] -> [Direction] -> Position -> [[Direction]]
-    branchLoop [] path _ = [path]
+    branchLoop [] path _                   = [path]
     branchLoop directions currPath currPos = concatMap branchHelper directions
       where
         branchHelper x = branchLoop (availableDirections (nextPos x)) (x:currPath) (nextPos x)
@@ -33,4 +33,4 @@ pickAllPaths gridSize = branchLoop (availableDirections start) [] start
 oneStep :: Position -> Direction -> Position
 oneStep (x, y) nextPosirection
     | nextPosirection == DRight = (x+1, y  )
-    | otherwise               = (x  , y+1)
+    | otherwise                 = (x  , y+1)
