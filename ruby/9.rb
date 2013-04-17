@@ -7,13 +7,12 @@
 # Find the product abc.
 
 
-# Since a < b < c, a can't be larger than 333 as that would force b to be at
-# least 334 and c 335. This would cause the sum to exceed 1000.
-# b can't be higher than 500 since c would need to be 501.
-def py_triplet
-  (1..333).each do |a|
-    (a+1..500).each do |b|
-      c = 1000 - a - b
+# Since a < b < c, a can't be larger than a third of 1000 as that would force
+# b and c to equal 334 and 335. b can't be more than half of 1000.
+def py_triplet(max=1000)
+  (1..max/3).each do |a|
+    (a+1..max/2).each do |b|
+      c = max - a - b
       if a < b and b < c
         return [a, b, c] if a**2 + b**2 == c**2
       end
