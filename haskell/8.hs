@@ -1,5 +1,5 @@
 {-
- - Find the greatest product of five consecutive digits in this 1000-digit
+ - Find the greatest product of thirteen consecutive digits in this 1000-digit
  - number (see code).
  -}
 
@@ -27,7 +27,7 @@ bigNumber = "73167176531330624919225119674426574742355349194934\
             \05886116467109405077541002256983155200055935729725\
             \71636269561882670428252483600823257530420752963450"
 
-greatest5NumberProduct :: String -> Integer
-greatest5NumberProduct numberString = maximum $ map product fiveDigitIntegers where
-    fiveDigitIntegers = map (map (\x -> read [x] :: Integer)) fiveDigitStrings
-    fiveDigitStrings  = filter (\x -> length x >= 5) $ map (take 5) $ tails numberString
+greatest13NumberProduct :: String -> Integer
+greatest13NumberProduct numberString = maximum $ map product thirteenDigitIntegers where
+    thirteenDigitIntegers = map (map (\x -> read [x] :: Integer)) thirteenDigitStrings
+    thirteenDigitStrings  = filter (\x -> length x >= 13) $ map (take 13) $ tails numberString
